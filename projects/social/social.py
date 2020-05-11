@@ -1,6 +1,11 @@
+from random import randrange
+from queue import SimpleQueue
+
+
 class User:
     def __init__(self, name):
         self.name = name
+
 
 class SocialGraph:
     def __init__(self):
@@ -45,8 +50,19 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        for user in range(num_users):
+            self.add_user(user)
 
         # Create friendships
+        # for every user
+        for user in self.users:
+            # assign random number of friendships
+            friends_num = randrange(avg_friendships*2)
+            for _ in range(friends_num):
+                # assign other random users as friends
+                friend_id = randrange(num_users)
+                if user < friend_id:
+                    self.add_friendship(user, friend_id)
 
     def get_all_social_paths(self, user_id):
         """
@@ -59,12 +75,29 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        paths = SimpleQueue()
+        paths.put(user_id)
+        # store a queue of paths
+        while not paths.empty():
+            current = paths.get()
+            if current not in visited:
+                visited[current] = [current]
+            # else, look at all the neghbours, and add new paths to the queue
+            for adjacent in self.friendships[current]:
+                if adjacent not in visited:
+                    paths.put(adjacent)
+                    new_path = visited[current]+[adjacent]
+                    visited[adjacent] = new_path
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populate_graph(10, 2)
-    print(sg.friendships)
+    sg.populate_graph(1000, 5)
+    # print(sg.friendships)
     connections = sg.get_all_social_paths(1)
-    print(connections)
+    # print(connections)
+    degrees = 0
+    for connection in connections:
+        degrees += len(connections[connection])
+    print(degrees/len(connections))
