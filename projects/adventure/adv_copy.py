@@ -14,8 +14,8 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-# map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+map_file = "maps/test_loop_fork.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -51,6 +51,7 @@ def projected_path(starting_room, already_visited=set()):
     path = []
     def add_to_path(room, back=None):
         # add room to visited
+        print(path)
         visited.add(room)
         # get all room exits
         exits = room.get_exits()
